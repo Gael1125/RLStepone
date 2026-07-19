@@ -111,7 +111,7 @@ async function renderInPage(source, params, mode) {
     renderer.setSize(params.imgSize, params.imgSize);
     renderer.setPixelRatio(1);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.0;
+    renderer.toneMappingExposure = 1.1;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 
     const scene = new THREE.Scene();
@@ -120,11 +120,11 @@ async function renderInPage(source, params, mode) {
     let followLight = null;
 
     if (params.lighting === 'follow') {
-      scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+      scene.add(new THREE.AmbientLight(0xffffff, 0.5));
       followLight = new THREE.DirectionalLight(0xffffff, 1.5);
       scene.add(followLight);
     } else {
-      scene.add(new THREE.AmbientLight(0xffffff, 0.12));
+      scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
       const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
       keyLight.position.set(2, 3, 2);
@@ -142,7 +142,7 @@ async function renderInPage(source, params, mode) {
       const envScene = new THREE.Scene();
       envScene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1.0));
       scene.environment = pmrem.fromScene(envScene, 0.04).texture;
-      scene.environmentIntensity = 0.8;
+      scene.environmentIntensity = 1.0;
       pmrem.dispose();
     }
 

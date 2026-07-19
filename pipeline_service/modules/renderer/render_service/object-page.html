@@ -36,12 +36,12 @@ function ensureContext(params) {
     });
     renderer.setPixelRatio(1);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.0;
+    renderer.toneMappingExposure = 1.1;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 
     scene = new THREE.Scene();
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.12));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
     const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
     keyLight.position.set(2, 3, 2);
@@ -59,7 +59,7 @@ function ensureContext(params) {
     const envScene = new THREE.Scene();
     envScene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1.0));
     scene.environment = pmrem.fromScene(envScene, 0.04).texture;
-    scene.environmentIntensity = 0.8;
+    scene.environmentIntensity = 1.0;
     pmrem.dispose();
 
     camera = new THREE.PerspectiveCamera(params.camFovDeg, 1.0, 0.01, 100);

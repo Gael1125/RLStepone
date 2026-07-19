@@ -84,9 +84,12 @@ Output rules:
     rename across iterations.
 
 Critical API rules (silent-failure traps):
-- **No metalness above 0.7** — this render has NO environment map. Any
-  material with metalness > 0.7 reflects nothing and renders as a near-black
-  surface regardless of `color`. Hard cap: metalness ≤ 0.6 for ALL metals.
+- **Metalness cap: 0.6** — the renderer uses a synthetic PMREM environment map
+  (hemisphere light baked into a cube texture, `environmentIntensity 1.0`).
+  Metalness values up to 0.6 produce correct glossy/reflective appearance for
+  metals, chrome, and polished surfaces — do NOT set metalness to 0 on anything
+  metallic just to be safe. Above 0.7 the material over-darkens on areas facing
+  away from the key light. Hard cap: metalness ≤ 0.6 for ALL metals.
   Use the color field to carry the actual shade (e.g. `#c0c0c0` for silver,
   `#3a3a3a` for dark gunmetal, `#b87333` for copper). Never set metalness 1.0.
 - No randomness — ever. `Math.random`, `Date`, `crypto`, and `performance`
@@ -242,8 +245,15 @@ Reminders before you write:
 - For each entry in `parts[]`, create a `const <name> = new THREE.Mesh(...)`
   whose variable matches `parts[i].name` (lowercase, underscores). The
   visual critic will refer to parts by that name in later repair rounds.
-- Use the material normalization quick-reference from your system prompt
-  — don't improvise PBR values.
+- **Material analysis first**: for every part in the OSD, identify the surface
+  type from the OSD `material` field and the reference image, then select the
+  matching row from the material normalization quick-reference in your system
+  prompt. Assign explicit `metalness` and `roughness` — never leave them at
+  defaults. Any part that looks shiny, reflective, or metallic MUST use a
+  non-zero `metalness` (≥ 0.4) and a low `roughness` (≤ 0.35).
+- **Color brightness**: set material `color` to match the reference as closely
+  as possible — do not darken colors; the render lighting reproduces reference
+  brightness accurately.
 - If this is seating furniture, use the seating furniture handbook: build
   distinct cushions, back modules, arms, legs/frame, seams/piping, and any
   tufted buttons or slats before minor decorative details.
@@ -265,8 +275,17 @@ CODER_USER_TEMPLATE_IMAGE_ONLY = """Reference image is attached above. Decompose
 Reminders before you write:
 - Pick a clear part hierarchy from the image. Name each `const` after its
   part (lowercase, underscores) so the critic can target it later.
-- Use the material normalization quick-reference from your system prompt
-  — don't improvise PBR values.
+- **Material analysis first**: before writing any geometry code, identify the
+  surface type of every visible part (metallic, glossy plastic, matte plastic,
+  wood, fabric, ceramic, glass, leather, etc.) and select the matching row from
+  the material normalization quick-reference in your system prompt. Assign
+  explicit `metalness` and `roughness` — never leave them at defaults. Any
+  part that looks shiny, reflective, or metallic in the reference MUST use a
+  non-zero `metalness` (≥ 0.4) and a low `roughness` (≤ 0.35). Parts that
+  look matte or non-reflective should have `metalness 0` and higher roughness.
+- **Color brightness**: set material `color` to match the reference image as
+  closely as possible. Do not darken colors out of caution — the render
+  lighting is calibrated to reproduce reference brightness accurately.
 - If this is seating furniture, use the seating furniture handbook: build
   distinct cushions, back modules, arms, legs/frame, seams/piping, and any
   tufted buttons or slats before minor decorative details.
