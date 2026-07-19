@@ -23,7 +23,7 @@ llm_clients:
     base_url: "http://localhost:8001/v1"
     api_key: "local"
     vllm:
-      model: "Windsword8989/Qwen-3.6-27B-sword-v7"
+      model: "Windsword8989/Qwen-3.6-27B-sword-v8"
       gpu_ids: "0,1"
       tensor_parallel_size: 2
       gpu_memory_utilization: 0.9
@@ -48,7 +48,7 @@ llm_clients:
 actors:
   planner:
     client: "coder-instance"
-    model: "Windsword8989/Qwen-3.6-27B-sword-v7"
+    model: "Windsword8989/Qwen-3.6-27B-sword-v8"
     workers: 128
     queue_size: 64
     max_tokens: 32768
@@ -66,7 +66,7 @@ actors:
       allow_fallbacks: true
   coder:
     client: "coder-instance"
-    model: "Windsword8989/Qwen-3.6-27B-sword-v7"
+    model: "Windsword8989/Qwen-3.6-27B-sword-v8"
     workers: 128
     queue_size: 64
     max_tokens: 24576
